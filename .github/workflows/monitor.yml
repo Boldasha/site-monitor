@@ -1,0 +1,35 @@
+name: Site Monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check site
+        run: |
+          python3 - <<'EOF'
+          import requests
+          from datetime import datetime
+
+          BOT_TOKEN = "8676870190:AAFDlaES0tIQgTbqZojyyOQP78W-0Qhcwio"
+          CHAT_ID = "-2967692731"
+          SITE_URL = "https://trs-dutyfree.ru/"
+
+          def send_telegram(text):
+              url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+              requests.post(url, json={"chat_id": CHAT_ID, "text": text}, timeout=10)
+
+          try:
+              r = requests.get(SITE_URL, timeout=10)
+              if r.status_code >= 500:
+                  raise Exception(f"Status {r.status_code}")
+              print("Site is UP")
+          except Exception as e:
+              now = datetime.now().strftime("%d.%m.%Y %H:%M")
+              send_telegram(f"🔴 САЙТ НЕДОСТУПЕН!\n🌐 {SITE_URL}\n🕐 {now}\nОшибка: {e}")
+              print(f"Site is DOWN: {e}")
+          EOF
