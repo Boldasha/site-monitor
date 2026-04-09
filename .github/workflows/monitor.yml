@@ -16,7 +16,7 @@ jobs:
           from datetime import datetime
 
           BOT_TOKEN = "8676870190:AAFDlaES0tIQgTbqZojyyOQP78W-0Qhcwio"
-          CHAT_ID = "-2967692731"
+          CHAT_ID = "-1002967692731""
           SITE_URL = "https://trs-dutyfree.ru/"
 
           def send_telegram(text):
